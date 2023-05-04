@@ -1,10 +1,21 @@
 # Адаптер климата Honda Civic 5D 2006-2011 (8 Gen)
-ПО адаптера климат-контроля, спасибо [Алексеем OdinokijKot](https://vk.com/odinokij_kot) за разбор протокола общения климата, [подробности тут](https://www.civic-club.ru/f/honda-civic-5d/190506-adapter-klimata-svoimi-rukami/)!
+ПО адаптера климат-контроля, спасибо [Алексею OdinokijKot](https://vk.com/odinokij_kot) за разбор протокола общения климата, [подробности тут](https://www.civic-club.ru/f/honda-civic-5d/190506-adapter-klimata-svoimi-rukami/)!
+
+### На данный момент рекомендуется установка только на Arduino Uno / Nano! 
+
+# Как прошить Uno/Nano
+1) [Установите драйвер CH340 - подробная инструкция {тык}](http://wiki.amperka.ru/articles:driver-ch340)
+2) [Скачайте файл прошивки {тык}](https://github.com/Snow4DV/civic-adapter-platformio/releases/latest)
+3) [Скачайте XLoader {тык}](https://jarduino.ru/xloader/)
+4) Подключите Uno/Nano к компьютеру
+5) Откройте XLoader, выберите микроконтроллер в списке, COM-порт, скачанный файл прошивки, скорость загрузки 115200:  
+![XLoader](https://jarduino.ru/wp-content/uploads/2019/12/Xloader_arduino.gif)  
+6) Нажимайте Upload, ждите, пока прошивка загрузится
 
 # To-Do
 
 * Требуется рефактор (разделить основной цикл на методы извлечения данных из сырых данных климата, сборка объекта Json в отдельном методе) - Pull Request-ы приветствуются. 
-* Добавить поддержку других плат
+* Добавить поддержку других плат - attiny, maple mini и другие.
 
 
 
