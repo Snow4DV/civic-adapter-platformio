@@ -6,7 +6,7 @@
 
 #define CLK 2 // Красный #4 провод в фишке климата (DISP CLK)
 #define DAT 5 // Жёлтый #5 провод в фишке климата (AC SO)
-#define IS_SLAVE false // Заменить false на true для переключения в режим slave (подключение в параллель с Connects 2 или штатным ГУ) 
+#define IS_SLAVE true // Заменить false на true для переключения в режим slave (подключение в параллель с Connects 2 или штатным ГУ) 
 
 StaticJsonDocument<128> jsonDoc;
 
@@ -108,6 +108,8 @@ boolean Check_CRC()
 
 void loop()
 {
+  delay(500);
+  return;
   digitalWrite(LED_BUILTIN, HIGH);
   Read_Climate_Protocol(DAT, CLK);
 
