@@ -10,6 +10,8 @@ fi
 # Create output directory if it doesn't exist
 mkdir -p output
 
+rm  output/*.hex
+
 # Loop through directories in .pio/build
 for dir in .pio/build/*/; do
     # Get board name from directory name
@@ -33,3 +35,13 @@ for dir in .pio/build/*/; do
     fi
 done
 
+
+if [ -f "output/MASTER-ARDUINO_UNO.hex" ]; then
+    cp "output/MASTER-ARDUINO_UNO.hex" "output/MASTER.hex"
+    echo "Created MASTER.hex"
+fi
+
+if [ -f "output/SLAVE-ARDUINO_UNO.hex" ]; then
+    cp "output/SLAVE-ARDUINO_UNO.hex" "output/SLAVE.hex"
+    echo "Created SLAVE.hex"
+fi
