@@ -85,6 +85,7 @@ void setup()
   jsonDoc["fanLevel"] = 0;
   jsonDoc["tempLeft"] = -1;
   jsonDoc["tempRight"] = -1;
+
   Serial.begin(57600);
 }
 
@@ -148,11 +149,15 @@ void loop()
     else {
       jsonDoc["tempRight"] = -1;
     }
+
+
   }
   String jsonStr;
   serializeJson(jsonDoc, jsonStr);
   
-  Serial.println("^" + jsonStr + "$");
+  if(Serial.available() > 0) {
+    Serial.println("^" + jsonStr + "$");
+  }
 
   digitalWrite(LED_BUILTIN, LOW);
   delay(100);
