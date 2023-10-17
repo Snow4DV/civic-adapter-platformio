@@ -79,7 +79,7 @@ void setup()
     pinMode(DAT, INPUT_PULLUP);
     Read_Climate_Protocol = &Climat_Read_Master;
   }
-  jsonDoc["ac"] = false;
+  jsonDoc["ac"] = 0;
   jsonDoc["auto"] = false;
   jsonDoc["fanDirection"] = 0;
   jsonDoc["fanLevel"] = 0;
