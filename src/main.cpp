@@ -155,9 +155,7 @@ void loop()
   String jsonStr;
   serializeJson(jsonDoc, jsonStr);
   
-  if(Serial.available() > 0) {
-    Serial.println("^" + jsonStr + "$");
-  }
+  Serial.println("^" + jsonStr + "$");
 
   digitalWrite(LED_BUILTIN, LOW);
   delay(100);
