@@ -10,9 +10,9 @@
 
 StaticJsonDocument<128> jsonDoc;
 
-volatile byte climat_data[7];
+volatile byte climateData[7];
 /* Формат пакеты климата
-//volatile byte climat_data[] = {B00000000, B00000001, B10001001, B10000000, B10100001, B10100100, B10001100};
+//volatile byte climateData[] = {B00000000, B00000001, B10001001, B10000000, B10100001, B10100100, B10001100};
 //                                Idle   p       Fanp    DirLFAp        ACp      Tmp2p      Tmp1p   XOR = 1p
 //                                  frame                   huu
 //                                                          elt
@@ -20,9 +20,9 @@ volatile byte climat_data[7];
 //  LSB first  ~(7 bin + parity(odd))                       dR
 */
 
-void (*Read_Climate_Protocol) (uint8_t, uint8_t) = NULL;
+void (*ClimateReadProtocol) (uint8_t, uint8_t) = NULL;
 
-void Climat_Read_Slave(uint8_t dataPin, uint8_t clockPin) {
+void climateReadSlave(uint8_t dataPin, uint8_t clockPin) {
   while (!digitalRead(clockPin)) {}
   delay(10);
   for (uint8_t b = 0; b < 7; b++ ) {
@@ -31,17 +31,17 @@ void Climat_Read_Slave(uint8_t dataPin, uint8_t clockPin) {
       while (digitalRead(clockPin)) {}
       switch (digitalRead(dataPin)) {
         case 0:
-          climat_data[b] |= 1 << i;
+          climateData[b] |= 1 << i;
           break;
         case 1:
-          climat_data[b] &= ~(1 << i);
+          climateData[b] &= ~(1 << i);
           break;
       }
     }
   }
 }
 
-void Climat_Read_Master(uint8_t dataPin, uint8_t clockPin)
+void climateReadMaster(uint8_t dataPin, uint8_t clockPin)
 {
   for (uint8_t b = 0; b < 7; b++)
   {
@@ -54,10 +54,10 @@ void Climat_Read_Master(uint8_t dataPin, uint8_t clockPin)
       switch (digitalRead(dataPin))
       {
       case 0:
-        climat_data[b] |= 1 << i;
+        climateData[b] |= 1 << i;
         break;
       case 1:
-        climat_data[b] &= ~(1 << i);
+        climateData[b] &= ~(1 << i);
         break;
       }
     }
@@ -71,13 +71,13 @@ void setup()
   if (IS_SLAVE) {
     pinMode(CLK, INPUT);
     pinMode(DAT, INPUT);
-    Read_Climate_Protocol = &Climat_Read_Slave;
+    ClimateReadProtocol = &climateReadSlave;
   }
   else {
     pinMode(CLK, OUTPUT);
     digitalWrite(CLK, LOW);
     pinMode(DAT, INPUT_PULLUP);
-    Read_Climate_Protocol = &Climat_Read_Master;
+    ClimateReadProtocol = &climateReadMaster;
   }
   jsonDoc["ac"] = 0;
   jsonDoc["auto"] = false;
@@ -93,13 +93,13 @@ void setup()
 bool Check_CRC()
 {
   uint8_t crc = 0;
-  if (climat_data[0] != 0)
+  if (climateData[0] != 0)
   {
     jsonDoc["tempLeft"] = 78;
     return 0;
   }
   for (byte i = 1; i < 7; i++)
-    crc ^= climat_data[i];
+    crc ^= climateData[i];
   if (crc != B10000001)
   {
     jsonDoc["tempLeft"] = 79;
@@ -111,16 +111,16 @@ bool Check_CRC()
 void loop()
 {
   digitalWrite(LED_BUILTIN, HIGH);
-  Read_Climate_Protocol(DAT, CLK);
+  ClimateReadProtocol(DAT, CLK);
 
   if (Check_CRC())
   {
-    jsonDoc["fanLevel"] = ((climat_data[1]) & B1110) ? ((climat_data[1] & B1110) >> 1): 0;
-    jsonDoc["fanDirection"] = (int) ((climat_data[2]) & B1110000 ? ((climat_data[2] & B1110000) >> 4) : 0);
-    jsonDoc["auto"] = ((climat_data[2]) & B10) == 2;
-    jsonDoc["ac"] = ((climat_data[3]) & B110 ? ((climat_data[3] & B110) >> 1) : 0);
+    jsonDoc["fanLevel"] = ((climateData[1]) & B1110) ? ((climateData[1] & B1110) >> 1): 0;
+    jsonDoc["fanDirection"] = (int) ((climateData[2]) & B1110000 ? ((climateData[2] & B1110000) >> 4) : 0);
+    jsonDoc["auto"] = ((climateData[2]) & B10) == 2;
+    jsonDoc["ac"] = ((climateData[3]) & B110 ? ((climateData[3] & B110) >> 1) : 0);
     
-    if (char i = (((climat_data[5]) & B11110) >> 1) ) {
+    if (char i = (((climateData[5]) & B11110) >> 1) ) {
     
       if (i == 1) {
         jsonDoc["tempLeft"] = 0;
@@ -136,7 +136,7 @@ void loop()
       jsonDoc["tempLeft"] = -1;
     }
 
-    if (char i = (((climat_data[4]) & B11110) >> 1) ) {
+    if (char i = (((climateData[4]) & B11110) >> 1) ) {
       if (i == 1) {
         jsonDoc["tempRight"] = 0;
       }
