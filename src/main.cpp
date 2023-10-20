@@ -87,24 +87,25 @@ void setup()
   jsonDoc["tempRight"] = -1;
 
   Serial.begin(57600);
+
 }
 
-boolean Check_CRC()
+bool Check_CRC()
 {
-  byte CRC = 0;
+  uint8_t crc = 0;
   if (climat_data[0] != 0)
   {
     jsonDoc["tempLeft"] = 78;
     return 0;
   }
   for (byte i = 1; i < 7; i++)
-    CRC ^= climat_data[i];
-  if (CRC != B10000001)
+    crc ^= climat_data[i];
+  if (crc != B10000001)
   {
     jsonDoc["tempLeft"] = 79;
-    return 0;
+    return false;
   }
-  return 1;
+  return true;
 }
 
 void loop()
