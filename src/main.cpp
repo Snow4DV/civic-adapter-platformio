@@ -5,7 +5,7 @@
 #define DAT 5		   // Жёлтый #5 провод в фишке климата (AC SO)
 #define IS_SLAVE false // Заменить false на true для переключения в режим slave (подключение в параллель с Connects 2 или штатным ГУ)
 
-#define EQUAL_COUNT 3 // Количество одинаковых состояний климата, которые должны быть получены для отправки нового состояния (для фильтрции). Рекомендуемый диапазон: 1-5 (1 - для отключения фильтрации)
+#define EQUAL_COUNT 2 // Количество одинаковых состояний климата, которые должны быть получены для отправки нового состояния (для фильтрции). Рекомендуемый диапазон: 1-5 (1 - для отключения фильтрации)
 
 volatile byte climateData[7];
 /* Формат пакеты климата
@@ -183,27 +183,19 @@ void loop()
 	}
 
 
-	bool compareResult = compareJsonDocs(jsonDoc, prevJsonDoc);
-	bool needToPrint = false;
-
-	if(compareResult) {
+	if(compareJsonDocs(jsonDoc, prevJsonDoc)) {
 		if (equalityCheck < EQUAL_COUNT) {
 			equalityCheck++;
-		} else {
-			needToPrint = true;
-		}
+		} 
 		delete jsonDoc;
 	} else {
 		if(prevJsonDoc != NULL) delete prevJsonDoc;
 		prevJsonDoc = jsonDoc;
 		equalityCheck = 1;
-		if(equalityCheck >= EQUAL_COUNT) {
-			needToPrint  = true;
-		}
 	}
 
 
-	if(needToPrint) {
+	if(equalityCheck >= EQUAL_COUNT) {
 		String jsonStr;
 		serializeJson(*prevJsonDoc, jsonStr);
 		Serial.println("^" + jsonStr + "$");
@@ -211,6 +203,7 @@ void loop()
 
 	
 	digitalWrite(LED_BUILTIN, LOW);
-	delay(100 / EQUAL_COUNT);
+	//delay(100 / EQUAL_COUNT);
+	delay(10);
 }
 
