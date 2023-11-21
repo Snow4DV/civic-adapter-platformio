@@ -5,7 +5,7 @@
 #define DAT 5		   // Жёлтый #5 провод в фишке климата (AC SO)
 #define IS_SLAVE false // Заменить false на true для переключения в режим slave (подключение в параллель с Connects 2 или штатным ГУ)
 
-#define EQUAL_COUNT 2 // Количество одинаковых состояний климата, которые должны быть получены для отправки нового состояния (для фильтрции). Рекомендуемый диапазон: 1-5 (1 - для отключения фильтрации)
+#define EQUAL_COUNT 3 // Количество одинаковых состояний климата, которые должны быть получены для отправки нового состояния (для фильтрции). Рекомендуемый диапазон: 1-5 (1 - для отключения фильтрации)
 
 volatile byte climateData[7];
 /* Формат пакеты климата
@@ -174,12 +174,13 @@ void loop()
 			(*jsonDoc)["tempRight"] = -1;
 		}
 	} else {
-		(*jsonDoc)["tempLeft"] = -1;
+		return;
+		/*		(*jsonDoc)["tempLeft"] = -1;
 		(*jsonDoc)["ac"] = 0;
 		(*jsonDoc)["auto"] = false;
 		(*jsonDoc)["fanDirection"] = 0;
 		(*jsonDoc)["fanLevel"] = 0;
-		(*jsonDoc)["tempRight"] = -1;
+		(*jsonDoc)["tempRight"] = -1; */
 	}
 
 
