@@ -121,6 +121,8 @@ bool compareJsonDocs(StaticJsonDocument<128>* doc1, StaticJsonDocument<128>* doc
 
 void loop()
 {
+
+	
 	digitalWrite(LED_BUILTIN, HIGH);
 	climateReadProtocol(DAT, CLK);
 
@@ -174,13 +176,12 @@ void loop()
 			(*jsonDoc)["tempRight"] = -1;
 		}
 	} else {
-		return;
-		/*		(*jsonDoc)["tempLeft"] = -1;
+		(*jsonDoc)["tempLeft"] = -1;
 		(*jsonDoc)["ac"] = 0;
 		(*jsonDoc)["auto"] = false;
 		(*jsonDoc)["fanDirection"] = 0;
 		(*jsonDoc)["fanLevel"] = 0;
-		(*jsonDoc)["tempRight"] = -1; */
+		(*jsonDoc)["tempRight"] = -1; 
 	}
 
 
@@ -205,6 +206,6 @@ void loop()
 	
 	digitalWrite(LED_BUILTIN, LOW);
 	//delay(100 / EQUAL_COUNT);
-	delay(10);
+	delay(5);
 }
 
